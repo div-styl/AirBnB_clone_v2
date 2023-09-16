@@ -14,6 +14,39 @@ from models.review import Review
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
+    
+    # -----------------------------------
+    def do_create(self, arg):
+        """Create an object of any class"""
+        args = arg.split()
+        if len(args) < 2:
+            print("** Missing class name or parameters **")
+            return
+
+        class_name = args[0]
+        if class_name not in HBNBCommand.classes:
+            print("** Class doesn't exist **")
+            return
+
+        params = args[1:]
+        instance_dict = {}
+        for param in params:
+            try:
+                key, value = param.split('=')
+                # replace underscores with spaces in key
+                key = key.replace('_', ' ')
+                # remove escape characters from value
+                value = value.replace('\\"', '"')
+                instance_dict[key] = value
+            except ValueError:
+                continue  # skip invalid parameters
+
+        new_instance = HBNBCommand.classes[class_name](**instance_dict)
+        storage.save()
+        print(new_instance.id)
+        storage.save()
+    # -----------------------------------
+    
 
     # determines prompt for interactive/non-interactive modes
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
