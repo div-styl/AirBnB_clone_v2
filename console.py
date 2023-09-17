@@ -48,34 +48,44 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Create a new instance of a class with given parameters."""
-        args = arg.split()
-        if not args:
-            print("** class name missing **")
+        arg = self.parse_create_args(arg)
+        if not arg:
             return
 
-        class_name = args[0]
+        class_name = arg[0]
+        params = arg[1:]
 
         if class_name not in HBNBCommand.__models_classes:
             print("** class doesn't exist **")
             return
 
-        # Parse the parameters
-        params = {}
-        for param in args[1:]:
-            try:
-                key, value = param.split('=')
-                if value.startswith('"') and value.endswith('"'):
-                    value = value[1:-1].replace('\\"', '"').replace('_', ' ')
-                elif '.' in value:
-                    value = float(value)
-                else:
-                    value = int(value)
-                params[key] = value
-            except ValueError:
-                pass
+        try:
+            # Create a new instance of the specified class
+            new_instance = eval(f"{class_name}()")
+        except Exception as e:
+            print(f"Error creating instance: {e}")
+            return
 
-        # Create a new instance and set attributes
-        new_instance = eval(f"{class_name}(**params)")
+        # Set attributes based on the provided parameters
+        for param in params:
+            key, value = param.split("=")
+            # Handle string values with escaped double quotes
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1].replace('\\"', '"').replace('_', ' ')
+            # Try to convert to float or int if possible
+            if '.' in value:
+                try:
+                    value = float(value)
+                except ValueError:
+                    pass
+            else:
+                try:
+                    value = int(value)
+                except ValueError:
+                    pass
+            setattr(new_instance, key, value)
+
+        # Save the new instance
         new_instance.save()
         print(new_instance.id)
 
@@ -102,7 +112,6 @@ class HBNBCommand(cmd.Cmd):
             args.append(current_arg)
 
         return args
-
         
     def default(self, argu):
         """
