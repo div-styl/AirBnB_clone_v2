@@ -10,7 +10,8 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        """Returns a dictionary of models currently in storage"""
+        """Returns a dictionary oof models
+        currently in storage"""
         return FileStorage.__objects
 
     def new(self, obj):
@@ -22,7 +23,7 @@ class FileStorage:
         if obj:
             id = obj.to_dict()["id"]
             className = obj.to_dict()["__class__"]
-            keyname = className+"."+id
+            keyname = className + "." + id
             if keyname in FileStorage.__objects:
                 del FileStorage.__objects[keyname]
                 self.save()
