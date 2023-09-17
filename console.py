@@ -170,16 +170,6 @@ class HBNBCommand(cmd.Cmd):
         """empty argu + ENTER shouldn’t execute anything"""
         pass
 
-    def do_create(self, arg):
-        """Create a new instance of BaseModel and print the id"""
-        model = parse_arg(arg)
-        if len(model) == 0:
-            print("** class name missing **")
-        elif model[0] not in HBNBCommand.__models_classes:
-            print("** class doesn't exist **")
-        else:
-            print(eval(model[0])().id)
-            storage.save()
 
     def do_show(self, arg):
         """show the string representation of an instance"""
