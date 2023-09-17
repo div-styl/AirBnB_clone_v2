@@ -46,53 +46,74 @@ class HBNBCommand(cmd.Cmd):
         "Review",
     }
 
-
     def do_create(self, arg):
-        """
-        Create a new instance of BaseModel and print the id
-        with support for object creation with given parameters.
-        """
-        model_args = parse_arg(arg)
-
-        if len(model_args) == 0:
-            print("** class name missing **")
+        """Create a new instance of a class with given parameters."""
+        arg = self.parse_create_args(arg)
+        if not arg:
             return
 
-        class_name = model_args[0]
+        class_name = arg[0]
+        params = arg[1:]
+
         if class_name not in HBNBCommand.__models_classes:
             print("** class doesn't exist **")
             return
 
-        # Extract parameter key-value pairs
-        params = {}
-        for param in model_args[1:]:
-            param_parts = param.split('=')
-            if len(param_parts) != 2:
-                continue
+        try:
+            # Create a new instance of the specified class
+            new_instance = eval(f"{class_name}()")
+        except Exception as e:
+            print(f"Error creating instance: {e}")
+            return
 
-            key, value = param_parts
-            # Handle string values enclosed in double quotes
+        # Set attributes based on the provided parameters
+        for param in params:
+            key, value = param.split("=")
+            # Handle string values with escaped double quotes
             if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('_', ' ')
-            # Try to convert to int or float
-            elif '.' in value:
+                value = value[1:-1].replace('\\"', '"').replace('_', ' ')
+            # Try to convert to float or int if possible
+            if '.' in value:
                 try:
                     value = float(value)
                 except ValueError:
-                    continue
+                    pass
             else:
                 try:
                     value = int(value)
                 except ValueError:
-                    continue
-            params[key] = value
+                    pass
+            setattr(new_instance, key, value)
 
-        # Create an instance of the specified class with the given parameters
-        new_instance = eval(class_name)(**params)
+        # Save the new instance
         new_instance.save()
         print(new_instance.id)
 
+    def parse_create_args(self, arg):
+        """Parse the create command arguments."""
+        args = []
+        in_quotes = False
+        current_arg = ""
 
+        for char in arg:
+            if char == ' ' and not in_quotes:
+                if current_arg:
+                    args.append(current_arg)
+                current_arg = ""
+            elif char == '=' and not in_quotes:
+                current_arg += char
+            elif char == '"':
+                in_quotes = not in_quotes
+                current_arg += char
+            else:
+                current_arg += char
+
+        if current_arg:
+            args.append(current_arg)
+
+        return args
+
+        
     def default(self, argu):
         """
         default commands
