@@ -74,31 +74,35 @@ def do_create(self, arg):
     # Iterate through the remaining parts to parse parameters
     for part in parts[1:]:
         # Split each part into key and value
-        key, value = part.split('=')
+        key_value = part.split('=')
 
-        # Remove double quotes from the value if present
-        if value.startswith('"') and value.endswith('"'):
-            value = value[1:-1]
+        # Check if the part is in key=value format
+        if len(key_value) == 2:
+            key, value = key_value
 
-        # Replace underscores with spaces in the key
-        key = key.replace('_', ' ')
+            # Remove double quotes from the value if present
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1]
 
-        # Check if the value is a float
-        if '.' in value:
-            try:
-                value = float(value)
-            except ValueError:
-                pass
+                # Replace underscores with spaces in the key
+                key = key.replace('_', ' ')
 
-        # Check if the value is an integer
-        else:
-            try:
-                value = int(value)
-            except ValueError:
-                pass
+                # Store the parameter in the dictionary
+                params[key] = value
 
-        # Store the parameter in the dictionary
-        params[key] = value
+            # Check if the value is a float
+            elif '.' in value:
+                try:
+                    params[key] = float(value)
+                except ValueError:
+                    pass
+
+            # Check if the value is an integer
+            else:
+                try:
+                    params[key] = int(value)
+                except ValueError:
+                    pass
 
     # Create an instance of the specified class with the parsed parameters
     new_obj = eval(f'{class_name}(**params)')
