@@ -46,72 +46,38 @@ class HBNBCommand(cmd.Cmd):
         "Review",
     }
 
-def do_create(self, arg):
-    """
-    Create a new object of the given class with the specified parameters.
-    Usage: create <Class name> <param 1> <param 2> <param 3>...
-    Param syntax: <key name>=<value>
-    """
-    # Split the input argument into parts
-    parts = arg.split()
+    def do_create(self, arg):
+        """Create a new instance of a class with given parameters."""
+        args = arg.split()
+        if not args:
+            print("** class name missing **")
+            return
 
-    # Check if the argument is empty
-    if not arg:
-        print("** class name missing **")
-        return
+        class_name = args[0]
 
-    # Get the class name from the first part
-    class_name = parts[0]
+        if class_name not in HBNBCommand.__models_classes:
+            print("** class doesn't exist **")
+            return
 
-    # Check if the class name is valid
-    if class_name not in self.__models_classes:
-        print("** class doesn't exist **")
-        return
-
-    # Initialize an empty dictionary to store parameters
-    params = {}
-
-    # Iterate through the remaining parts to parse parameters
-    for part in parts[1:]:
-        # Split each part into key and value
-        key_value = part.split('=')
-
-        # Check if the part is in key=value format
-        if len(key_value) == 2:
-            key, value = key_value
-
-            # Remove double quotes from the value if present
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1]
-
-                # Replace underscores with spaces in the key
-                key = key.replace('_', ' ')
-
-                # Store the parameter in the dictionary
+        # Parse the parameters
+        params = {}
+        for param in args[1:]:
+            try:
+                key, value = param.split('=')
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace('\\"', '"').replace('_', ' ')
+                elif '.' in value:
+                    value = float(value)
+                else:
+                    value = int(value)
                 params[key] = value
+            except ValueError:
+                pass
 
-            # Check if the value is a float
-            elif '.' in value:
-                try:
-                    params[key] = float(value)
-                except ValueError:
-                    pass
-
-            # Check if the value is an integer
-            else:
-                try:
-                    params[key] = int(value)
-                except ValueError:
-                    pass
-
-    # Create an instance of the specified class with the parsed parameters
-    new_obj = eval(f'{class_name}(**params)')
-
-    # Save the new object to the storage
-    new_obj.save()
-
-    # Print the ID of the created object
-    print(new_obj.id)
+        # Create a new instance and set attributes
+        new_instance = eval(f"{class_name}(**params)")
+        new_instance.save()
+        print(new_instance.id)
 
     def parse_create_args(self, arg):
         """Parse the create command arguments."""
