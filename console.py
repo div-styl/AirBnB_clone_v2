@@ -15,7 +15,7 @@ from models.review import Review
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
     
-    # -----------------------------------
+    # !-----------------------------------
     def do_create(self, arg):
         """Create an object of any class"""
         args = arg.split()
@@ -45,7 +45,7 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
         print(new_instance.id)
         storage.save()
-    # -----------------------------------
+    # !-----------------------------------
     
 
     # determines prompt for interactive/non-interactive modes
