@@ -1,59 +1,58 @@
 #!/usr/bin/python3
-"""BaseModel class"""
+""" basemodel the mother of all models """
 
 import models
 from uuid import uuid4
 from datetime import datetime
+
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import String
 
+
 Base = declarative_base()
 
-
 class BaseModel:
-    """BaseModel class
-    """
+    """ the base model which all other models inherit from """
+
     id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
-
     def __init__(self, *args, **kwargs):
-        """baseModel constructor
-        """
+        """ base model constructor """
+
+        time_format = "%Y-%m-%dT%H:%M:%S.%f"
         self.id = str(uuid4())
-        self.created_at = self.updated_at = datetime.utcnow()
-        if kwargs:
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
+
+        if len(kwargs) != 0:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key != "__class__":
-                    setattr(self, key, value)
+                    self.__dict__[key] = datetime.strptime(value, time_format)
+                else:
+                    self.__dict__[key] = value
+        else:
+            models.storage.new(self)
+
+    def __str__(self):
+        """ class string representation """
+        class_name = self.__class__.__name__
+        string = f"[{class_name}] ({self.id}) {self.__dict__}"
+        return string
 
     def save(self):
-        """Update updated_at"""
-        self.updated_at = datetime.utcnow()
-        models.storage.new(self)
+        """ update the last updated time to now """
+        self.updated_at = datetime.today()
         models.storage.save()
 
     def to_dict(self):
-        """Return a dictionary representation of the BaseModel
-        """
-        my_dict = self.__dict__.copy()
-        my_dict["__class__"] = str(type(self).__name__)
-        my_dict["created_at"] = self.created_at.isoformat()
-        my_dict["updated_at"] = self.updated_at.isoformat()
-        my_dict.pop("_sa_instance_state", None)
-        return my_dict
-
-    def delete(self):
-        """Delete instance from storage"""
-        models.storage.delete(self)
-
-    def __str__(self):
-        """Return string reperesentation of BaseModel"""
-        d = self.__dict__.copy()
-        d.pop("_sa_instance_state", None)
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, d)
+        """ create new dict for the current class """
+        new_dict = self.__dict__.copy()
+        new_dict["created_at"] = self.created_at.isoformat()
+        new_dict["updated_at"] = self.updated_at.isoformat()
+        new_dict["__class__"] = self.__class__.__name__
+        return new_dict
