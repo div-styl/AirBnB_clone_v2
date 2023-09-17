@@ -48,44 +48,34 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Create a new instance of a class with given parameters."""
-        arg = self.parse_create_args(arg)
-        if not arg:
+        args = arg.split()
+        if not args:
+            print("** class name missing **")
             return
 
-        class_name = arg[0]
-        params = arg[1:]
+        class_name = args[0]
 
         if class_name not in HBNBCommand.__models_classes:
             print("** class doesn't exist **")
             return
 
-        try:
-            # Create a new instance of the specified class
-            new_instance = eval(f"{class_name}()")
-        except Exception as e:
-            print(f"Error creating instance: {e}")
-            return
-
-        # Set attributes based on the provided parameters
-        for param in params:
-            key, value = param.split("=")
-            # Handle string values with escaped double quotes
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('\\"', '"').replace('_', ' ')
-            # Try to convert to float or int if possible
-            if '.' in value:
-                try:
+        # Parse the parameters
+        params = {}
+        for param in args[1:]:
+            try:
+                key, value = param.split('=')
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace('\\"', '"').replace('_', ' ')
+                elif '.' in value:
                     value = float(value)
-                except ValueError:
-                    pass
-            else:
-                try:
+                else:
                     value = int(value)
-                except ValueError:
-                    pass
-            setattr(new_instance, key, value)
+                params[key] = value
+            except ValueError:
+                pass
 
-        # Save the new instance
+        # Create a new instance and set attributes
+        new_instance = eval(f"{class_name}(**params)")
         new_instance.save()
         print(new_instance.id)
 
