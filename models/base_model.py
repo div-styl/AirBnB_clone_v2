@@ -1,29 +1,22 @@
 #!/usr/bin/python3
-""" basemodel the mother of all models """
-
+""" BaseModel for all models """
 import models
 from uuid import uuid4
 from datetime import datetime
-
-
-import os
-from sqlalchemy import Column, String, DATETIME
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-
 
 Base = declarative_base()
 
 class BaseModel:
     """ the base model which all other models inherit from """
 
-    id = Column(String(60), nullable=False, primary_key=True, unique=True)
-    created_at = Column(DATETIME, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DATETIME, nullable=False, default=datetime.utcnow())
+    id = Column(String(60), primary_key=True, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
-    
     def __init__(self, *args, **kwargs):
         """ base model constructor """
-
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
         self.id = str(uuid4())
         self.created_at = datetime.today()
@@ -32,9 +25,9 @@ class BaseModel:
         if len(kwargs) != 0:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
-                    self.__dict__[key] = datetime.strptime(value, time_format)
+                    setattr(self, key, datetime.strptime(value, time_format))
                 else:
-                    self.__dict__[key] = value
+                    setattr(self, key, value)
         else:
             models.storage.new(self)
 
@@ -46,7 +39,7 @@ class BaseModel:
 
     def save(self):
         """ update the last updated time to now """
-        self.updated_at = datetime.today()
+        self.updated_at = datetime.utcnow()
         models.storage.save()
 
     def to_dict(self):
@@ -55,4 +48,5 @@ class BaseModel:
         new_dict["created_at"] = self.created_at.isoformat()
         new_dict["updated_at"] = self.updated_at.isoformat()
         new_dict["__class__"] = self.__class__.__name__
+        new_dict.pop('_sa_instance_state', None)  # Remove _sa_instance_state
         return new_dict
