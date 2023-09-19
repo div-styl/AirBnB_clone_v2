@@ -1,19 +1,12 @@
 #!/usr/bin/python3
 """ Initialize the storage module """
-
 from os import getenv
 
-import os
-from models.engine.db_storage import DBStorage
-from models.engine.file_storage import FileStorage
-
-
-
-storage_type = getenv("HBNB_TYPE_STORAGE")
-if storage_type == "db":
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    from models.engine.db_storage import DBStorage
     storage = DBStorage()
     storage.reload()
 else:
+    from models.engine.file_storage import FileStorage
     storage = FileStorage()
     storage.reload()
-    Base = {}

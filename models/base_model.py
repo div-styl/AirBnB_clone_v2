@@ -2,13 +2,9 @@
 """ BaseModel for all models """
 import models
 from uuid import uuid4
-
-import os
-import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DATETIME
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-
 
 Base = declarative_base()
 
@@ -54,14 +50,3 @@ class BaseModel:
         new_dict["__class__"] = self.__class__.__name__
         new_dict.pop('_sa_instance_state', None)  # Remove _sa_instance_state
         return new_dict
-
-
-    def delete(self, obj=None):
-        """Deletes obj from __objects if it's inside"""
-        if obj:
-            id = obj.to_dict()["id"]
-            className = obj.to_dict()["__class__"]
-            keyname = className + "." + id
-            if keyname in FileStorage.__objects:
-                del FileStorage.__objects[keyname]
-                self.save()
