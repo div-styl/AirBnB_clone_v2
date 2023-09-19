@@ -3,6 +3,9 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 
+import os
+from sqlalchemy.orm import relationship
+
 class City(BaseModel, Base):
     """Represent a city."""
     __tablename__ = 'cities'
