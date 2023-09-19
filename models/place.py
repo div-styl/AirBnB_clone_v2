@@ -69,3 +69,29 @@ class Place(BaseModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    if models.storage_type != "db":
+
+        @property
+        def review(self):
+            """getter for review"""
+            from models.review import Review
+
+            review_list = []
+            all_rev = models.storage.all(Review)
+            for review in all_rev.values():
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review_list
+
+        @property
+        def amenities(self):
+            """getter for amenities"""
+            from models.amenity import Amenity
+
+            amenity_list = []
+            all_amen = models.storage.all(Amenity)
+            for amenity in all_amen.values():
+                if amenity.place_id == self.id:
+                    amenity_list.append(amenity)
+            return amenity_list
