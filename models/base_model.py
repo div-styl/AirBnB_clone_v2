@@ -11,9 +11,9 @@ Base = declarative_base()
 class BaseModel:
     """ the base model which all other models inherit from """
 
-    id = Column(String(60), primary_key=True, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    id = Column(String(60), primary_key=True, nullable=False, unique=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
         """ base model constructor """
@@ -26,7 +26,7 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
                     setattr(self, key, datetime.strptime(value, time_format))
-                else:
+                elif key != "__class__":
                     setattr(self, key, value)
         else:
             models.storage.new(self)

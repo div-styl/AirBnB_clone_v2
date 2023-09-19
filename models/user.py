@@ -2,7 +2,8 @@
 """This is the user class"""
 import models
 
-from models.base_model import BaseModel, Base
+from models.base_model import BaseModel
+from models.base_model import Base, BaseModel
 from os import getenv
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
@@ -18,8 +19,9 @@ class User(BaseModel, Base):
         first_name (str): first name
         last_name (str): last name
     """
-    if models.storage_type == "db":
-        __tablename__ = "users"
+
+    __tablename__ = "users"
+    if storage_type == "db":
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)

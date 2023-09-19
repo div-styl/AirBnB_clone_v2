@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 from models.state import State
 from models.city import City
-
+from models.user import User
 class DBStorage:
     """ Database storage class """
 
@@ -27,7 +27,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Query on the current database session """
-        classes = [State, City]  # Add other classes as needed
+        classes = [State, City, User]  # Add other classes as needed
         objects = {}
 
         if cls is None:
@@ -63,4 +63,3 @@ class DBStorage:
         Session = scoped_session(sessionmaker(bind=self.__engine,
                                               expire_on_commit=False))
         self.__session = Session()
-
