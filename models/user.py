@@ -19,9 +19,8 @@ class User(BaseModel):
         first_name (str): first name
         last_name (str): last name
     """
-
-    __tablename__ = "users"
     if models.storage_type == "db":
+        __tablename__ = "users"
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=False)
