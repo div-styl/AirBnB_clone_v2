@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 import models
 
-from models.base_model import BaseModel
-from models.base_model import Base, BaseModel
-from os import getenv
+from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
@@ -53,7 +51,13 @@ class Place(BaseModel):
         price_by_night = Column(Integer, default=0, nullable=True)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        review = relationship("Review", backref="place")
+        reviews = relationship("Review", backref="place")
+        amenities = relationship(
+            "Amenity",
+            secondary="place_amenity",
+            backref="place_amenities",
+            viewonly=False,
+        )
     else:
         city_id = ""
         user_id = ""
