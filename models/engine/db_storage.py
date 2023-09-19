@@ -4,13 +4,12 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-from models.state import State
-from models.city import City
 from models.user import User
 from models.place import Place
-from models.review import Review
+from models.state import State
+from models.city import City
 from models.amenity import Amenity
-
+from models.review import Review
 class DBStorage:
     """ Database storage class """
 
@@ -31,7 +30,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Query on the current database session """
-        classes = [State, City, User, Place, Review, Amenity]  # Add other classes as needed
+        classes = [User, Place, State, City, Amenity, Review]  # Add other classes as needed
         objects = {}
 
         if cls is None:
