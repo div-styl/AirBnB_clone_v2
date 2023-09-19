@@ -9,13 +9,13 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class BaseModel:
-  """ the base model which all other models inherit from """
+    """ the base model which all other models inherit from """
 
-  id = Column(String(60), primary_key=True, nullable=False)
-  created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-  updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    id = Column(String(60), primary_key=True, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
-  def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
     """ base model constructor """
     time_format = "%Y-%m-%dT%H:%M:%S.%f"
     self.id = str(uuid4())
@@ -23,26 +23,26 @@ class BaseModel:
     self.updated_at = datetime.today()
 
     if len(kwargs) != 0:
-      for key, value in kwargs.items():
+        for key, value in kwargs.items():
         if key == "created_at" or key == "updated_at":
-          setattr(self, key, datetime.strptime(value, time_format))
+            setattr(self, key, datetime.strptime(value, time_format))
         else:
-          setattr(self, key, value)
+            setattr(self, key, value)
     else:
-      models.storage.new(self)
+        models.storage.new(self)
 
-  def __str__(self):
+    def __str__(self):
     """ class string representation """
     class_name = self.__class__.__name__
     string = f"[{class_name}] ({self.id}) {self.__dict__}"
     return string
 
-  def save(self):
+    def save(self):
     """ update the last updated time to now """
     self.updated_at = datetime.utcnow()
     models.storage.save()
 
-  def to_dict(self):
+    def to_dict(self):
     """ create new dict for the current class """
     new_dict = self.__dict__.copy()
     new_dict["created_at"] = self.created_at.isoformat()
