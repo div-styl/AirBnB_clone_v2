@@ -1,17 +1,22 @@
 #!/usr/bin/python3
 """defines the HBNBCommand class"""
-import cmd
-import re
 from shlex import split
+
+import cmd
+from datetime import datetime
+import re
 import os
+import sys
+import uuid
+
 from models.base_model import BaseModel
+from models import storage
 from models.user import User
+from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-from models.place import Place
-from models import storage
 
 
 def parse_arg(arg):
