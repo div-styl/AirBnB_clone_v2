@@ -7,6 +7,10 @@ from models.base_model import Base
 from models.state import State
 from models.city import City
 from models.user import User
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
+
 class DBStorage:
     """ Database storage class """
 
@@ -27,7 +31,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Query on the current database session """
-        classes = [State, City, User]  # Add other classes as needed
+        classes = [State, City, User, Place, Review, Amenity]  # Add other classes as needed
         objects = {}
 
         if cls is None:
