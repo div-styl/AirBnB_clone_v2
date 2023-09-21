@@ -16,19 +16,18 @@ if storage_type == "db":
         Column(
             "place_id",
             String(60),
-            ForeignKey("places.id", ondelete="CASCADE", onupdate="CASCADE"),
+            ForeignKey("places.id"),
             primary_key=True,
-            nullable=False
+            nullable=False,
         ),
         Column(
             "amenity_id",
             String(60),
-            ForeignKey("amenities.id", ondelete="CASCADE", onupdate="CASCADE"),
+            ForeignKey("amenities.id"),
             primary_key=True,
-            nullable=False
+            nullable=False,
         ),
     )
-
 
 class Place(BaseModel, Base):
     """Represent a place.

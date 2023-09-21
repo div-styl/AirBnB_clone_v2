@@ -1,14 +1,12 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-import models
-
 from models.base_model import BaseModel
 from models.base_model import Base, BaseModel
 from os import getenv
-from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
-from os import getenv
+
 storage_type = getenv("HBNB_TYPE_STORAGE")
 
 
