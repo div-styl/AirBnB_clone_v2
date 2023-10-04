@@ -21,13 +21,21 @@ sudo apt-get -y install nginx
 cprint "$green" "Nginx installed"
 cprint "$green" "Creating folder for your static web and Configuring Nginx..."
 
-sudo mkdir -p /data/web_static/shared/ /data/web_static/releases/test/
-
+sudo mkdir -p /data/web_static/releases/test /data/web_static/shared
 # create a index.html file
-echo "Holberton School" | sudo tee /data/web_static/releases/test/index.html
-
+config=\
+"
+<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>
+"
+echo "$config" | sudo tee /data/web_static/releases/test/index.html
 # create a symbolic link to index.html
-sudo ln -sf /data/web_static/releases/test/index.html /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # Give ownership of the /data/
 
@@ -38,7 +46,6 @@ sudo chown -hR ubuntu:ubuntu /data/
 
 cprint "$yellow" "[ ! ] Configuring Nginx..."
 sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' /etc/nginx/sites-available/default
-
 sudo service nginx restart
 
 cprint "$green" "[ * ] Nginx configured"
