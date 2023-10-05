@@ -5,7 +5,9 @@ from datetime import datetime
 from fabric.api import run, env, put, local, task
 import os
 
+
 env.hosts = ["54.90.63.243", "54.90.4.180"]
+
 
 @task
 def do_pack():
@@ -26,6 +28,7 @@ def do_pack():
         return path
     except Exception:
         return None
+
 
 @task
 def do_deploy(archive_path):
