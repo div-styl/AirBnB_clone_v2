@@ -33,10 +33,10 @@ def do_pack():
 def do_deploy(archive_path):
     """
     Deploys a web static package to the web server.
-    
+
     Args:
         archive_path (str): The path to the web static package archive.
-        
+
     Returns:
         bool: True if the deployment is successful, False otherwise.
     """
