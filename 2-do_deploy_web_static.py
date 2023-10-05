@@ -5,7 +5,7 @@ from datetime import datetime
 from fabric.api import run, env, put, local, task
 import os
 
-host = env.hosts = ["54.90.63.243", "54.90.4.180"]
+env.hosts = ["54.90.63.243", "54.90.4.180"]
 
 @task
 def do_pack():
@@ -29,20 +29,26 @@ def do_pack():
 
 @task
 def do_deploy(archive_path):
-    """deploy package to remote server
+    """
+    Deploy package to remote server.
+
     Arguments:
-        archive_path: path to archive to deploy
+        archive_path: Path to archive to deploy.
     """
     if not archive_path or not os.path.exists(archive_path):
         return False
+
     put(archive_path, '/tmp')
+
     ar_name = archive_path[archive_path.find("/") + 1: -4]
     try:
         if not os.path.exists(archive_path):
             return False
+
         fn_with_ext = os.path.basename(archive_path)
         fn_no_ext, ext = os.path.splitext(fn_with_ext)
         dpath = "/data/web_static/releases/"
+
         put(archive_path, "/tmp/")
         run("rm -rf {}{}/".format(dpath, fn_no_ext))
         run("mkdir -p {}{}/".format(dpath, fn_no_ext))
@@ -52,7 +58,9 @@ def do_deploy(archive_path):
         run("rm -rf {}{}/web_static".format(dpath, fn_no_ext))
         run("rm -rf /data/web_static/current")
         run("ln -s {}{}/ /data/web_static/current".format(dpath, fn_no_ext))
+
         print("New version deployed!")
         return True
+
     except Exception:
         return False
