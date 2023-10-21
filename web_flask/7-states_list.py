@@ -25,6 +25,12 @@ def state_list():
 
 @app.teardown_appcontext
 def tear_db(exception):
+    """
+    Teardown function to close the database connection.
+
+    Args:
+        exception (Exception): The exception raised, if any.
+    """
     storage.close()
 
 
