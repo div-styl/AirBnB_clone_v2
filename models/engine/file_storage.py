@@ -17,7 +17,7 @@ class FileStorage:
             className = cls.__name__
             for key, val in FileStorage.__objects.items():
                 if key.split(".")[0] == className:
-                    print_dict[key] = str(val)
+                    print_dict[key] = val
             return print_dict
         else:
             return FileStorage.__objects
