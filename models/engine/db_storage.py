@@ -10,6 +10,8 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+
+
 class DBStorage:
     """ Database storage class """
 
@@ -30,7 +32,8 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Query on the current database session """
-        classes = [User, Place, State, City, Amenity, Review]  # Add other classes as needed
+        classes = [User, Place, State,
+                   City, Amenity, Review]  # Add other classes as needed
         objects = {}
 
         if cls is None:
@@ -67,11 +70,12 @@ class DBStorage:
                                               expire_on_commit=False))
         self.__session = Session()
 
-def close(self):
-    """
-    Close the session.
+    def close(self):
+        """
+        Close the session.
 
-    This method calls the remove() method on the private session attribute
-    in the class session.
-    """
-    self.__session.remove()
+        This method calls the remove() method on the
+        private session attribute
+        in the class session.
+        """
+        self.__session.close()

@@ -11,6 +11,8 @@ from models import state
 app = Flask(__name__)
 
 app.route("/", strict_slashes=False)
+
+
 def index():
     """retunr Hello HBNB"""
     return "Hello HBNB!"
@@ -92,7 +94,10 @@ def odd_num(n):
     return render_template("6-number_odd_or_even.html", n=n,
                            even_or_odd=evenness)
 
-@app.route("/states_list", strict_slashes=False)
+
+app.route("/states_list", strict_slashes=False)
+
+
 def state_list():
     """
     Route handler for displaying a list of states.
