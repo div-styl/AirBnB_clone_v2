@@ -19,12 +19,12 @@ class State(BaseModel, Base):
     else:
         name=""
 
-    if storage_type == "db":
         @property
         def cities(self):
-            cities_list = []
-            everycity = models.storage.all(city)
-            for all_City in everycity.values():
-                if all_City.state_id == self.id:
-                    cities_list.append(city)
-            return cities_list
+            from models import storage
+            citylist = []
+            citiesAll = storage.all(city)
+            for cities in citiesAll.values():
+                if cities.state_id == self.id:
+                    citylist.append(cities)
+            return citylist
