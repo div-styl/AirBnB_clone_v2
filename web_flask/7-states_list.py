@@ -5,8 +5,7 @@
 from flask import Flask, render_template
 from models import *
 from models import storage
-import models
-from models import state
+from models.state import State
 
 app = Flask(__name__)
 
@@ -106,7 +105,7 @@ def state_list():
         A rendered HTML template with a sorted list of states.
     """
     # sorted(list(storage.all("State").values()), key=lambda x: x.name)
-    states = storage.all(state)
+    states = storage.all(State)
 
     return render_template("7-states_list.html", states=states)
 
