@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 
 app.route("/states_list", strict_slashes=False)
-
-
 def state_list():
     """
     Route handler for displaying a list of states.
@@ -34,7 +32,7 @@ def tear_db(exception):
     Args:
         exception (Exception): The exception raised, if any.
     """
-    storage.close()
+    return storage.close()
 
 
 if __name__ == "__main__":
