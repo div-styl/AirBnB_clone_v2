@@ -5,7 +5,7 @@
 from flask import Flask, render_template
 from models import *
 from models import storage
-from models import state
+from models.state import State
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def cities_by_states():
     """
 
     # Get all the state objects from the storage
-    states = storage.all(state)
+    states = storage.all(State)
 
     # Render the HTML template with the states
     return render_template("8-cities_by_states.html", states=states)
